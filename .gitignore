@@ -230,4 +230,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-*.csv
+*.csvHOMEWORK.BIN
+*.BIN
