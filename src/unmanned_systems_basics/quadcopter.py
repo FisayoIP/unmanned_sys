@@ -82,7 +82,7 @@ def euler_to_quaternion(
     ]
 
 
-class Quadcopter:
+class  Quadcopter:
     """
     Minimal ArduPilot SITL interface for class demonstrations and Homework 1.
 
