@@ -1,7 +1,6 @@
 """
-ME 459/5559 - Homework 1, Problem 2(b)
-Gyro-only attitude estimate: integrate body rates p, q over time and
-compare against ground truth to observe drift.
+Problem 2(b)
+Gyro-only attitude estimate
 """
 
 import numpy as np
@@ -19,7 +18,7 @@ def gyro_only_integration(rate, dt, theta0=0.0):
 
 
 def main():
-    os.makedirs("gyro_plots", exist_ok=True)
+    os.makedirs("gyro_only_plots", exist_ok=True)
     df = pd.read_csv("HOMEWORK_complementary_filter.csv")
 
     t = df["t_s"].to_numpy()
@@ -30,15 +29,13 @@ def main():
     truth_roll = df["truth_roll_deg"].to_numpy()
     truth_pitch = df["truth_pitch_deg"].to_numpy()
 
-    # Initialize the estimate at the first available truth value
-    # (first couple of rows can be NaN before the truth source kicks in)
     roll0 = truth_roll[np.isfinite(truth_roll)][0]
     pitch0 = truth_pitch[np.isfinite(truth_pitch)][0]
 
     roll_gyro = gyro_only_integration(p, dt, theta0=np.deg2rad(roll0))
     pitch_gyro = gyro_only_integration(q, dt, theta0=np.deg2rad(pitch0))
 
-    # --- Roll ---
+ 
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.plot(t, truth_roll, label="Truth", linewidth=2)
     ax.plot(t, roll_gyro, label="Gyro-only estimate", linewidth=1)
@@ -48,10 +45,9 @@ def main():
     ax.grid(True)
     ax.legend()
     fig.tight_layout()
-    fig.savefig("gyro_plots/fig_gyro_only_roll.png", dpi=200)
-    print("Saved fig_gyro_only_roll.png")
+    fig.savefig("gyro_only_plots/gyro_roll.png", dpi=200)
 
-    # --- Pitch ---
+
     fig, ax = plt.subplots(figsize=(9, 5))
     ax.plot(t, truth_pitch, label="Truth", linewidth=2)
     ax.plot(t, pitch_gyro, label="Gyro-only estimate", linewidth=1)
@@ -61,8 +57,8 @@ def main():
     ax.grid(True)
     ax.legend()
     fig.tight_layout()
-    fig.savefig("gyro_plots/fig_gyro_only_pitch.png", dpi=200)
-    print("Saved fig_gyro_only_pitch.png")
+    fig.savefig("gyro_only_plots/gyro_pitch.png", dpi=200)
+    # print("Here")
 
     plt.show()
 
