@@ -8,11 +8,11 @@ def using_arctan_for_theta(inputs) -> np.array:
     theta = np.arctan2()
     #theta = atan2(-ax, sqrt(ay² + az²))
     # can do math on full array
-# dataset = pd.read_csv("/Users/fisayopopoola/unmanned_sys/toy_data/toy_data_complementary_filter.csv")
-# print(f"dataset is, {dataset}")
-# time_d = dataset["t_s"]
-# acceleration = dataset["accel_y_m_s2"]
-# print(acceleration)
+    # dataset = pd.read_csv("/Users/fisayopopoola/unmanned_sys/toy_data/toy_data_complementary_filter.csv")
+    # print(f"dataset is, {dataset}")
+    # time_d = dataset["t_s"]
+    # acceleration = dataset["accel_y_m_s2"]
+    # print(acceleration)
 
 def gyro_only_integration(rate, dt, theta0=0.0):
     theta = np.zeros(len(rate))

@@ -11,20 +11,12 @@ import matplotlib.pyplot as plt
 
 
 def accel_roll_pitch(ax, ay, az):
-    """Part (a): instantaneous roll/pitch from accelerometer, in radians."""
     roll_acc = np.arctan2(-ay, -az)
     pitch_acc = np.arctan2(-ax, np.sqrt(ay**2 + az**2))
     return roll_acc, pitch_acc
 
 
 def complementary_filter(rate, dt, acc_angle, alpha, theta0):
-    """Recursive complementary filter for a single axis (roll OR pitch).
-    rate      : gyro rate for this axis (rad/s), e.g. p for roll, q for pitch
-    dt        : timestep array (s)
-    acc_angle : accelerometer-derived angle for this axis (rad), same length as rate
-    alpha     : blend weight (close to 1 = trust gyro more)
-    theta0    : initial angle (rad)
-    """
     theta = np.zeros(len(rate))
     theta[0] = theta0
     for k in range(1, len(rate)):
@@ -69,7 +61,7 @@ def main():
         pitch_rmse = rmse(pitch_est[valid], truth_pitch[valid])
         results.append((a, roll_rmse, pitch_rmse))
 
-        # --- Roll (top) + Pitch (bottom) subplots, one figure per alpha ---
+        # roll, pitch plots
         fig, (ax_roll, ax_pitch) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
 
         ax_roll.plot(df["t_s"], truth_roll, label="Truth", linewidth=2, color="black")
@@ -91,7 +83,7 @@ def main():
         fig.savefig(fname, dpi=200)
         print(f"Saved {fname}")
 
-    # --- Print RMSE table ---
+    # Print RMSE table
     print(f"\n{'alpha':>8} | {'Roll RMSE (deg)':>16} | {'Pitch RMSE (deg)':>17}")
     print("-" * 48)
     for a, r_rmse, p_rmse in results:

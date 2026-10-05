@@ -17,7 +17,8 @@ import pyqtgraph as pg
 # our simulator
 # ============================================================
 
-MAVLINK_CONNECTION = "udp:127.0.0.1:14553"
+#MAVLINK_CONNECTION = "udp:127.0.0.1:14553"
+MAVLINK_CONNECTION = "udp:192.168.64.1:14553"
 
 PLOT_WINDOW_SEC = 50.0
 UPDATE_RATE_HZ = 50.0

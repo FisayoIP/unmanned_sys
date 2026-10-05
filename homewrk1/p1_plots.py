@@ -78,7 +78,7 @@ def plot_attitude(df, outfile="p1_plots/attitude.png"):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate HW1 Problem 1(b) plots from the flight-data CSV.")
+    parser = argparse.ArgumentParser(description=" HW1 Problem 1(b) plots from the vehicle_motion CSV.")
     parser.add_argument("csv_path", help="Path to the flight data CSV")
     args = parser.parse_args()
 

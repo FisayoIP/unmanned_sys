@@ -1,24 +1,18 @@
 visted = dict()
 unvisited = dict()
 
-def collision(
-    
-) -> None:
+def collision() -> None:
     ...
 
-def djikstra(
-    
-) -> None:
+def djikstra() -> None:
     ...
     
 class Node:
-    def __intit__(self, 
-                  x, 
-                  y, 
-                  cost, 
-                  parent
-    ) -> None:
-        ...
+    def __init__(self, x, y, cost, parent ):
+        self.x = x,
+        self.y = y,
+        self.cost = cost,
+        self.parent = parent
 
 """
 Functions
