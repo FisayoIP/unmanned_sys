@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 MAP_SIZE = 2000
 SAFE_RAD = 4
@@ -37,6 +38,35 @@ def met2index(meters: float) -> int:
 def index2met(idx: int) -> float:
     return (idx*RESOLUTION) + (RESOLUTION/2)
 
-def build_grid():
+def build_grid(inflated_obstacles: list) -> np.ndarray:
+    """Create a 2D occupancy grid. grid[row=N, col=E]: 0 = free, 1 = blocked."""
+    # 1. number of cells per side (MAP_SIZE / RESOLUTION, as int)
+    cellnum = MAP_SIZE / RESOLUTION
+    # 2. blank grid of zeros, that size by that size
+    grid = np.zeros((cellnum,cellnum))
+    # 3. for each obstacle:
+    for obs in inflated_obstacles:
+    #      unpack nmin, nmax, emin, emax
+        nmin, nmax, emin, emax = obs
+    #      low indices  -> met2index (rounds down)
+        nmin = 0 if nmin <= 0 else met2index(nmin)
+        emin = 0 if emin <= 0 else met2index(emin)
+    #      high indices -> math.ceil(value / RESOLUTION) (rounds up, also the slice end)
+        nmax = cellnum if nmax >= cellnum else math.ceil(nmax/RESOLUTION)
+        emax = cellnum if emax >= cellnum else math.ceil(emax/RESOLUTION)
+    #      clamp lows to >= 0 and highs to <= number of cells
+    #      fill grid[n_lo:n_hi, e_lo:e_hi] with 1
+    grid[nmin:nmax, emin:emax]
+    # 4. return grid
+    return grid
+    
+
+
+
+def is_free(grid: np.ndarray, row: int, col: int) -> bool:
+    """True if (row, col) is on the map and not blocked."""
+    # 1. if row or col is outside 0 to (grid size - 1): return False
+    # 2. otherwise return whether grid[row, col] is 0
     ...
+    
     
