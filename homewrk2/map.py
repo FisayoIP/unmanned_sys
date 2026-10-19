@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import matplotlib as plt
 
 MAP_SIZE = 2000
 SAFE_RAD = 4
@@ -7,7 +8,10 @@ START  = (10,10)
 GOAL = (190, 180)
 GOAL_RAD = 5
 RESOLUTION = 2
-OBSTACLES = [(35,70, 25, 90), (85, 120, 75, 130), (130, 165, 20, 85), (145, 180, 120, 165)]
+OBSTACLES = [(35,70, 25, 90), 
+             (85, 120, 75, 130), 
+             (130, 165, 20, 85), 
+             (145, 180, 120, 165)]
 
 
 def inflate(obstacles: list, saftey_rad: float):
@@ -38,26 +42,17 @@ def met2index(meters: float) -> int:
 def index2met(idx: int) -> float:
     return (idx*RESOLUTION) + (RESOLUTION/2)
 
-def build_grid(inflated_obstacles: list) -> np.ndarray:
+def build_grid(obstacles: list) -> np.ndarray:
     """Create a 2D occupancy grid. grid[row=N, col=E]: 0 = free, 1 = blocked."""
-    # 1. number of cells per side (MAP_SIZE / RESOLUTION, as int)
-    cellnum = MAP_SIZE / RESOLUTION
-    # 2. blank grid of zeros, that size by that size
-    grid = np.zeros((cellnum,cellnum))
-    # 3. for each obstacle:
-    for obs in inflated_obstacles:
-    #      unpack nmin, nmax, emin, emax
+    cellnum = int(MAP_SIZE / RESOLUTION)
+    grid = np.zeros((cellnum,cellnum), dtype=int)
+    for obs in obstacles:
         nmin, nmax, emin, emax = obs
-    #      low indices  -> met2index (rounds down)
-        nmin = 0 if nmin <= 0 else met2index(nmin)
-        emin = 0 if emin <= 0 else met2index(emin)
-    #      high indices -> math.ceil(value / RESOLUTION) (rounds up, also the slice end)
-        nmax = cellnum if nmax >= cellnum else math.ceil(nmax/RESOLUTION)
-        emax = cellnum if emax >= cellnum else math.ceil(emax/RESOLUTION)
-    #      clamp lows to >= 0 and highs to <= number of cells
-    #      fill grid[n_lo:n_hi, e_lo:e_hi] with 1
-    grid[nmin:nmax, emin:emax]
-    # 4. return grid
+        n_low = 0 if nmin <= 0 else met2index(nmin)
+        e_low = 0 if emin <= 0 else met2index(emin)
+        n_max = cellnum if nmax >= MAP_SIZE else math.ceil(nmax/RESOLUTION)
+        e_max = cellnum if emax >= MAP_SIZE else math.ceil(emax/RESOLUTION)
+        grid[n_low:n_max, e_low:e_max] = 1
     return grid
     
 
@@ -70,3 +65,8 @@ def is_free(grid: np.ndarray, row: int, col: int) -> bool:
     ...
     
     
+if __name__ == "__main__":
+    obs = inflate(OBSTACLES)
+    grid = build_grid(obs)
+    plt.imshow(grid, origin="lower")
+    plt.show()
