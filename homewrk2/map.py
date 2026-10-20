@@ -1,9 +1,9 @@
 import math
 import numpy as np
-import matplotlib as plt
 
-MAP_SIZE = 2000
+MAP_SIZE = 200
 SAFE_RAD = 4
+CRUISE_SPEED = 12 #m/s
 START  = (10,10)
 GOAL = (190, 180)
 GOAL_RAD = 5
@@ -14,7 +14,7 @@ OBSTACLES = [(35,70, 25, 90),
              (145, 180, 120, 165)]
 
 
-def inflate(obstacles: list, saftey_rad: float):
+def inflate(obstacles=OBSTACLES, saftey_rad=SAFE_RAD):
     new = []
     for coords in obstacles:
         nmin, nmax, emin, emax = coords
@@ -43,7 +43,7 @@ def index2met(idx: int) -> float:
     return (idx*RESOLUTION) + (RESOLUTION/2)
 
 def build_grid(obstacles: list) -> np.ndarray:
-    """Create a 2D occupancy grid. grid[row=N, col=E]: 0 = free, 1 = blocked."""
+    # Create a 2D occupancy grid. grid[row=N, col=E]: 0 = free, 1 = blocked.
     cellnum = int(MAP_SIZE / RESOLUTION)
     grid = np.zeros((cellnum,cellnum), dtype=int)
     for obs in obstacles:
@@ -56,17 +56,24 @@ def build_grid(obstacles: list) -> np.ndarray:
     return grid
     
 
+def in_collision(p: tuple, obstacles: list) -> bool:
+    # True if point p = (N, E) is off the map or inside any obstacle.
+    n, e = p
+    if not (0 <= n <= MAP_SIZE and 0 <= e <= MAP_SIZE):
+        return True
+    for nmin, nmax, emin, emax in obstacles:
+        if nmin <= n <= nmax and emin <= e <= emax:
+            return True
+    return False
 
+def line_collision(p1: tuple, p2: tuple, obstacles: list, step: float = 0.5) -> bool:
+    # True if the straight line from p1 to p2 hits an obstacle.
+    n_steps = max(1, math.ceil(find_distance(p1, p2) / step))
+    for k in range(n_steps + 1):
+        t = k / n_steps            # 0 at p1, 1 at p2
+        point = (p1[0] + t * (p2[0] - p1[0]),
+                 p1[1] + t * (p2[1] - p1[1]))
+        if in_collision(point, obstacles):
+            return True
+    return False
 
-def is_free(grid: np.ndarray, row: int, col: int) -> bool:
-    """True if (row, col) is on the map and not blocked."""
-    # 1. if row or col is outside 0 to (grid size - 1): return False
-    # 2. otherwise return whether grid[row, col] is 0
-    ...
-    
-    
-if __name__ == "__main__":
-    obs = inflate(OBSTACLES)
-    grid = build_grid(obs)
-    plt.imshow(grid, origin="lower")
-    plt.show()
