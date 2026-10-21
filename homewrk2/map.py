@@ -3,11 +3,12 @@ import numpy as np
 
 MAP_SIZE = 200
 SAFE_RAD = 4
-CRUISE_SPEED = 12 #m/s
+CRUISE_SPEED = 12 # m/s
 START  = (10,10)
 GOAL = (190, 180)
 GOAL_RAD = 5
 RESOLUTION = 2
+MIN_TURN_RAD = 20 # m
 OBSTACLES = [(35,70, 25, 90), 
              (85, 120, 75, 130), 
              (130, 165, 20, 85), 
